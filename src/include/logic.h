@@ -53,6 +53,7 @@ class World {
     private:
         vector<Snake*> snakes;
         double wrap(double x);
+        double dist(double x1, double y1, double x2, double y2);
 };
 
 

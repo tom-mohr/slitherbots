@@ -85,6 +85,10 @@ double World::wrap(double x) {
     return mod(x + size, 2 * size) - size;
 }
 
+double World::double dist(double x1, double y1, double x2, double y2) {
+    return hypot(wrap(x2 - x1), wrap(y2 - y1));
+}
+
 void World::step() {
     // get api responses
     for (auto snake : snakes) {
@@ -94,8 +98,8 @@ void World::step() {
         
         for (auto other : snakes) {
             for (auto seg : other->segments) {
-                double dist = distance(head, seg);
-                if (dist <= snake->sight_radius) {
+                double dist = dist(head->x, head->y, seg->x, seg->y);
+                if (dist <= snake->sight_radius + seg->radius) {
                     
                     SegmentInfo si;
 
@@ -151,7 +155,7 @@ void World::step() {
             if (other == snake) continue;// skip self
 
             for (auto seg : other->segments) {
-                double dist = distance(head, seg);
+                double dist = dist(head->x, head->y, seg->x, seg->y);
 
                 // check for collision
                 if (dist < head->radius + seg->radius) {
