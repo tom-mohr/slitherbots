@@ -51,11 +51,15 @@ void World::step() {
                 double dist = distance(head, seg);
                 if (dist <= snake.sight_radius) {
 
+                    SegmentInfo si;
+
+                    si.r = dist;
+                    si.dir = atan2(seg.y - head.y, seg.x - head.x);
+                    si.angle = mod(seg.angle - head.angle + M_PI, M_2_PI) - M_PI;// angle in interval [-pi, +pi)
+
+                    api.segments.push_back(si);
                 }
             }
-            double angleDiff = other.angle - snake.angle;
-            angleDiff = mod(angleDiff + M_PI, M_2_PI) - M_PI;// angle in interval [-pi, +pi)
-            api.segments.push_back(seg);
         }
 
         //todo: execute user code: snake.step(api);
