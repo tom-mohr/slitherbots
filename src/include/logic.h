@@ -49,4 +49,5 @@ class World {
         double size; // world goes from -size to +size in each dimension
     private:
         vector<Snake> snakes;
+        double wrap(double x);
 };

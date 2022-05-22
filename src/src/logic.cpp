@@ -73,6 +73,10 @@ World::World(vector<Snake> snakes) {
     speed = 5;
 }
 
+double World::wrap(double x) {
+    return mod(x + size, 2 * size) - size;
+}
+
 void World::step() {
 
     // get api responses
@@ -118,6 +122,12 @@ void World::step() {
         // move head
         head.x += speed * cos(head.angle);
         head.y += speed * sin(head.angle);
+
+        // wrap coordinates
+        for (&auto seg : snake.segments) {
+            seg.x = wrap(seg.x);
+            seg.y = wrap(seg.y);
+        }
     }
 
     // detect & handle collisions
@@ -138,8 +148,3 @@ void World::step() {
         }
     }
 }
-
-World::World(vector<Snake> _snakes){
-    snakes = _snakes;
-}
-
