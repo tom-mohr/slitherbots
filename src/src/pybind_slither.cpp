@@ -11,6 +11,8 @@ PYBIND11_MODULE(slitherbots, m) {
     py::class_<Snake>(m, "Snake")
         .def(py::init<string,py::function>(),py::arg("name"),py::arg("step_fn"));
     py::class_<Api>(m,"Api"); //needed for snake logic
+    py::class_<World>(m,"World")
+        .def(py::init<vector<Snake>>(),py::arg("snakes"));
     
     /*    .def_property("pos",&Body::get_pos,&Body::set_pos)
         .def("trunc",&Body::trunc,py::arg("order") = 0)

@@ -123,6 +123,6 @@ void World::step() {
 }
 
 World::World(vector<Snake> _snakes){
-
+    snakes = _snakes;
 }
 
