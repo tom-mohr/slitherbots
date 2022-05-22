@@ -17,7 +17,7 @@ void World::step() {
     for (auto& snake : snakes) {
         for (auto& other : snakes) {
             double angleDiff = other.angle - snake.angle;
-            angleDiff = fmod
+            angleDiff = mod(angleDiff + M_PI, M_2_PI) - M_PI;
         }
     }
 }
