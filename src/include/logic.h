@@ -33,10 +33,10 @@ class Snake {
     public:
         Snake(string _name, py::function _step_fn);
         double sight_radius;
-        vector<Segment> segments;
-        Segment& get_head();  // utility method to get segements[0]
+        vector<Segment*> segments;
+        Segment* get_head();  // utility method to get segements[0]
         py::function step_fn;
-        void apply_api(Api api);  // translate api response to snake movement
+        void apply_api(Api* api);  // translate api response to snake movement
     private:
         string name;
 };
@@ -44,11 +44,11 @@ class Snake {
 
 class World {
     public:
-        World(vector<Snake> snakes);
+        World(vector<Snake>);
         void step();
         double speed; // how many pixels a snake moves per step
         double size; // world goes from -size to +size in each dimension
     private:
-        vector<Snake> snakes;
+        vector<Snake*> snakes;
         double wrap(double x);
 };

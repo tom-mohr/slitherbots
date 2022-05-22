@@ -7,10 +7,10 @@
 using namespace std;
 
 // seed random generator
-srand (static_cast <unsigned> (time(0)));
+
 
 double random(double min, double max) {
-    LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(max - min)));
+    min + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(max - min)));
 }
 
 Snake::Snake(string _name, py::function _step_fn) {//todo: pass name and step method from user
@@ -18,24 +18,24 @@ Snake::Snake(string _name, py::function _step_fn) {//todo: pass name and step me
     name = _name;
     step_fn = _step_fn;
     
-    Segment head(random(-1, 1), random(-1, 1), 10, random(0, M_2_PI));
+    Segment *head = new Segment(random(-1, 1), random(-1, 1), 10, random(0, M_2_PI));
     segments.push_back(head);
 }
 
-Segment& Snake::get_head() {
+Segment* Snake::get_head() {
     return segments[0];
 }
 
-void Snake::apply_api(Api api) {
-    Segment& head = get_head();
-    head.angle += clamp(api.angle, -0.5, 0.5);
+void Snake::apply_api(Api* api) {
+    Segment* head = get_head();
+    head->angle += clamp(api->angle, -0.5, 0.5);
 }
 
-Segment::Segment(double x, double y, double radius, double angle) {
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-    this.angle = angle;
+Segment::Segment(double _x, double _y, double _radius, double _angle) {
+    x = _x;
+    y = _y;
+    radius = _radius;
+    angle = _angle;
 }
 
 double clamp(double value, double min, double max) {
@@ -58,8 +58,8 @@ double distance(double x1, double y1, double x2, double y2) {
     return hypot(x2 - x1, y2 - y1);
 }
 
-double distance(Segment& a, Segment& b) {
-    return distance(a.x, a.y, b.x, b.y);
+double distance(Segment* a, Segment* b) {
+    return distance(a->x, a->y, b->x, b->y);
 }
 
 // make angle to be in [-pi, pi)
@@ -67,8 +67,11 @@ double nice_angle(double angle) {
     return mod(angle + M_PI, M_2_PI) - M_PI;
 }
 
-World::World(vector<Snake> snakes) {
-    this.snakes = snakes;
+World::World(vector<Snake> _snakes) {
+    srand(time(NULL));
+    for(auto& snake : _snakes){
+        snakes.push_back(&snake);
+    }
     size = 512;
     speed = 5;
 }
@@ -80,21 +83,22 @@ double World::wrap(double x) {
 void World::step() {
 
     // get api responses
-    for (auto& snake : snakes) {
+    for (auto snake : snakes) {
         Api api;
 
-        Segment& head = snake.get_head();
+        Segment* head = snake->get_head();
 
-        for (auto& other : snakes) {
-            for (auto& seg : other.segments) {
+        for (auto other : snakes) {
+            for (auto seg : other->segments) {
                 double dist = distance(head, seg);
-                if (dist <= snake.sight_radius) {
+                if (dist <= snake->sight_radius) {
 
                     SegmentInfo si;
 
+                    
                     si.r = dist;
-                    si.dir = nice_angle(atan2(seg.y - head.y, seg.x - head.x) - head.angle);
-                    si.angle = nice_angle(seg.angle - head.angle);
+                    si.dir = nice_angle(atan2(seg->y - head->y, seg->x - head->x) - head->angle);
+                    si.angle = nice_angle(seg->angle - head->angle);
 
                     if (&other == &snake) {
                         api.self_segments.push_back(si);
@@ -104,49 +108,49 @@ void World::step() {
                 }
             }
         }
-        snake.step_fn(api);
+        snake->step_fn(api);
         // apply api object
-        snake.apply_api(api);
+        snake->apply_api(&api);
     }
 
     // GAME LOGIC
 
     // move each snake
-    for (auto& snake : snakes) {
-        Segment& head = snake.get_head();
+    for (auto snake : snakes) {
+        Segment* head = snake->get_head();
 
-        if (snake.segments.size() > 1) {
+        if (snake->segments.size() > 1) {
 
             // move each segment to location of the segment in front of it
-            for (int i=snake.segments.size() - 1; i > 0; i--) {// start from last index (tail)
-                snake.segments[i].x = snake.segments[i - 1].x;
-                snake.segments[i].y = snake.segments[i - 1].y;
+            for (int i=snake->segments.size() - 1; i > 0; i--) {// start from last index (tail)
+                snake->segments[i]->x = snake->segments[i - 1]->x;
+                snake->segments[i]->y = snake->segments[i - 1]->y;
             }
         }
 
         // move head
-        head.x += speed * cos(head.angle);
-        head.y += speed * sin(head.angle);
+        head->x += speed * cos(head->angle);
+        head->y += speed * sin(head->angle);
 
         // wrap coordinates
-        for (&auto seg : snake.segments) {
-            seg.x = wrap(seg.x);
-            seg.y = wrap(seg.y);
+        for (auto seg : snake->segments) {
+            seg->x = wrap(seg->x);
+            seg->y = wrap(seg->y);
         }
     }
 
     // detect & handle collisions
-        for (auto& snake : snakes) {
-        Segment& head = snake.get_head();
+        for (auto snake : snakes) {
+        Segment* head = snake->get_head();
 
-        for (auto& other : snakes) {
-            if (&other == &snake) continue;// skip self
+        for (auto other : snakes) {
+            if (other == snake) continue;// skip self
 
-            for (auto& seg : other.segments) {
+            for (auto seg : other->segments) {
                 double dist = distance(head, seg);
 
                 // check for collision
-                if (dist < head.radius + seg.radius) {
+                if (dist < head->radius + seg->radius) {
                     //todo: rip
                 }
             }
