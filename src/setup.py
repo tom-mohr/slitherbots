@@ -18,7 +18,7 @@ __version__ = "0.0.1"
 
 ext_modules = [
     Pybind11Extension(
-        'slither',
+        'slitherbots',
         [
             'src/pybind_slither.cpp'
         ],
@@ -30,7 +30,7 @@ ext_modules = [
 ]
 
 setup(
-    name="slither",
+    name="slitherbots",
     version=__version__,
     author="Tom Mohr, Andreas Faust",
     author_email="",
