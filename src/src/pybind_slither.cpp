@@ -14,7 +14,8 @@ PYBIND11_MODULE(slitherbots, m) {
         .def_readonly("segments",&Api::segments)
         .def_readwrite("angle",&Api::angle);
     py::class_<World>(m,"World")
-        .def(py::init<vector<Snake>>(),py::arg("snakes"));
+        .def(py::init<vector<Snake>>(),py::arg("snakes"))
+        .def("step",&World::step);
     
     /*    .def_property("pos",&Body::get_pos,&Body::set_pos)
         .def("trunc",&Body::trunc,py::arg("order") = 0)
