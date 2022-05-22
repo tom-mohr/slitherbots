@@ -160,9 +160,9 @@ void World::step() {
                 // check for collision
                 if (dist < head->radius + seg->radius) {
                     //todo: rip
+                    cout << snake->name << endl;
                 }
             }
         }
     }
-    
 }
