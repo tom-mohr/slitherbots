@@ -20,7 +20,8 @@ ext_modules = [
     Pybind11Extension(
         'slitherbots',
         [
-            'src/pybind_slither.cpp'
+            'src/pybind_slither.cpp',
+            'src/logic.cpp'
         ],
         include_dirs=[
             "include/"

@@ -1,11 +1,13 @@
 #include "logic.h"
 #include <math.h>
-#include <pybind11/pybind11.h>
+#include <string>
 
 using namespace std;
 
-Snake::Snake(/*name, step*/) {//todo: pass name and step method from user
+Snake::Snake(string _name, py::function _step_fn) {//todo: pass name and step method from user
     sight_radius = 30;
+    name = _name;
+    step_fn = _step_fn;
 
     //todo: add head to segments
     //todo: pick random head angle at start
@@ -116,3 +118,8 @@ void World::step() {
         }
     }
 }
+
+World::World(vector<Snake> _snakes){
+
+}
+
