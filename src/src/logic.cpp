@@ -8,7 +8,10 @@ Snake::Snake(string _name, py::function _step_fn) {//todo: pass name and step me
     sight_radius = 30;
     name = _name;
     step_fn = _step_fn;
-
+    
+    Api test;
+    step_fn(test);
+    
     //todo: add head to segments
     //todo: pick random head angle at start
 }

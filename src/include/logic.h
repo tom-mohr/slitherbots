@@ -31,7 +31,6 @@ class Api {
 class Snake {
     public:
         Snake(string _name, py::function _step_fn);
-
         double sight_radius;
         vector<Segment> segments;
         Segment& get_head();  // utility method to get segements[0]

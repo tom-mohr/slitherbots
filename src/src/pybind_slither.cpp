@@ -8,9 +8,11 @@
 namespace py = pybind11;
 
 PYBIND11_MODULE(slitherbots, m) {
-    /*py::class_<Body>(m, "Body")
-        //.def(py::init<vector<vector<int>>,int>(),py::arg("f2v"),py::arg("n_vertices"))
-        .def_property("pos",&Body::get_pos,&Body::set_pos)
+    py::class_<Snake>(m, "Snake")
+        .def(py::init<string,py::function>(),py::arg("name"),py::arg("step_fn"));
+    py::class_<Api>(m,"Api"); //needed for snake logic
+    
+    /*    .def_property("pos",&Body::get_pos,&Body::set_pos)
         .def("trunc",&Body::trunc,py::arg("order") = 0)
         .def("ambo",&Body::ambo)
         .def("dual",&Body::dual)
