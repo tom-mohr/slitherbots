@@ -56,8 +56,8 @@ class World {
 };
 
 
-inline void util(string ficki){
-     
+inline void util(int schoenheit){
+
 }
 #endif
 
