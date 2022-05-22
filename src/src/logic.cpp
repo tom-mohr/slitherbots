@@ -95,7 +95,12 @@ void World::step() {
                     si.r = dist;
                     si.dir = nice_angle(atan2(seg.y - head.y, seg.x - head.x) - head.angle);
                     si.angle = nice_angle(seg.angle - head.angle);
-                    api.segments.push_back(si);
+
+                    if (&other == &snake) {
+                        api.self_segments.push_back(si);
+                    } else {
+                        api.segments.push_back(si);
+                    }
                 }
             }
         }

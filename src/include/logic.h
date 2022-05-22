@@ -26,6 +26,7 @@ class Api {
     public:
         double angle;  // angle speed
         vector<SegmentInfo> segments;
+        vector<SegmentInfo> self_segments;
 };
 
 class Snake {
