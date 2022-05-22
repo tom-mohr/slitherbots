@@ -9,9 +9,6 @@ Snake::Snake(string _name, py::function _step_fn) {//todo: pass name and step me
     name = _name;
     step_fn = _step_fn;
     
-    Api test;
-    step_fn(test);
-    
     //todo: add head to segments
     //todo: pick random head angle at start
 }
@@ -76,9 +73,7 @@ void World::step() {
                 }
             }
         }
-
-        //todo: execute user code: snake.step(api);
-
+        snake.step_fn(api);
         // apply api object
         snake.apply_api(api);
     }

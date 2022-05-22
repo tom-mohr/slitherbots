@@ -34,9 +34,9 @@ class Snake {
         double sight_radius;
         vector<Segment> segments;
         Segment& get_head();  // utility method to get segements[0]
+        py::function step_fn;
         void apply_api(Api api);  // translate api response to snake movement
     private:
-        py::function step_fn;
         string name;
 };
 
