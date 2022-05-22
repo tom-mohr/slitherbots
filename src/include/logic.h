@@ -6,6 +6,16 @@ using namespace std;
 class Api {
     public:
         double angle;  // angle speed
+        vector<SegmentInfo> segments;
+};
+
+class SegmentInfo {
+    public:
+        double angle;  // orientation
+
+        // polar coordinates
+        double dir;
+        double r;
 };
 
 class Snake {
@@ -16,7 +26,7 @@ class Snake {
         double sight_radius;
         vector<Segment> segments;
         Segment& get_head();  // utility method to get segements[0]
-        void apply(Api api);  // translate api response to snake movement
+        void apply_api(Api api);  // translate api response to snake movement
     private:
 };
 

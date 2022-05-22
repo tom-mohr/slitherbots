@@ -12,7 +12,7 @@ Segment& Snake::get_head() {
     return segments[0];
 }
 
-void Snake::apply(Api api) {
+void Snake::apply_api(Api api) {
     Segment& head = get_head();
     head.angle += clamp(api.angle, -0.5, 0.5);
 }
@@ -52,11 +52,15 @@ void World::step() {
                 double dist = distance(head, seg);
                 if (dist <= snake.sight_radius) {
 
+                    SegmentInfo si;
+
+                    si.r = dist;
+                    si.dir = atan2(seg.y - head.y, seg.x - head.x);
+                    si.angle = mod(seg.angle - head.angle + M_PI, M_2_PI) - M_PI;// angle in interval [-pi, +pi)
+
+                    api.segments.push_back(si);
                 }
             }
-            double angleDiff = other.angle - snake.angle;
-            angleDiff = mod(angleDiff + M_PI, M_2_PI) - M_PI;// angle in interval [-pi, +pi)
-            api.segments.push_back(seg);
         }
 
         //todo: execute user code: snake.step(api);
