@@ -1,9 +1,10 @@
 #include "logic.h"
 #include <math.h>
+#include <pybind11/pybind11.h>
 
 using namespace std;
 
-Snake::Snake(/*name, step*/) {//todo: pass name and step method from user
+Snake::Snake(string name,) {//todo: pass name and step method from user
     sight_radius;
 }
 

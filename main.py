@@ -1,9 +1,6 @@
-import slitherbots
-from utils import get_users
+from slitherbots import World
+from utils import get_snakes
 
-users = get_users()
-print(users)
-
-#world = slitherbots.World(users)
+world = slitherbots.World(get_snakes())
 
 
