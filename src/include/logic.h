@@ -1,12 +1,12 @@
 #include <vector>
 
 using namespace std;
-using namespace pybind11;
+//using namespace pybind11;
 
 class Api {
     public:
         double angle;  // angle speed
-}
+};
 
 class Snake {
     public:
