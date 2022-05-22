@@ -1,3 +1,5 @@
+#ifndef LOGIC_H
+#define LOGIC_H
 #include <vector>
 #include <pybind11/pybind11.h>
 
@@ -52,3 +54,10 @@ class World {
         vector<Snake*> snakes;
         double wrap(double x);
 };
+
+
+inline void util(string ficki){
+     
+}
+#endif
+
