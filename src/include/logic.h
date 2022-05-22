@@ -43,6 +43,7 @@ class World {
     public:
         World();
         void step();
+        double speed; // how many pixels a snake moves per step
     private:
         vector<Snake> snakes;//.push_back(), .size()
 };

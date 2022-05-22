@@ -4,7 +4,10 @@
 using namespace std;
 
 Snake::Snake(/*name, step*/) {//todo: pass name and step method from user
-    sight_radius;
+    sight_radius = 30;
+
+    //todo: add head to segments
+    //todo: pick random head angle at start
 }
 
 Segment& Snake::get_head() {
@@ -40,7 +43,14 @@ double distance(Segment& a, Segment& b) {
     return distance(a.x, a.y, b.x, b.y);
 }
 
+// make angle to be in [-pi, pi)
+double nice_angle(double angle) {
+    return mod(angle + M_PI, M_2_PI) - M_PI;
+}
+
 void World::step() {
+
+    // get api responses
     for (auto& snake : snakes) {
         Api api;
 
@@ -54,9 +64,8 @@ void World::step() {
                     SegmentInfo si;
 
                     si.r = dist;
-                    si.dir = atan2(seg.y - head.y, seg.x - head.x);
-                    si.angle = mod(seg.angle - head.angle + M_PI, M_2_PI) - M_PI;// angle in interval [-pi, +pi)
-
+                    si.dir = nice_angle(atan2(seg.y - head.y, seg.x - head.x) - head.angle);
+                    si.angle = nice_angle(seg.angle - head.angle);
                     api.segments.push_back(si);
                 }
             }
@@ -66,5 +75,43 @@ void World::step() {
 
         // apply api object
         snake.apply_api(api);
+    }
+
+    // GAME LOGIC
+
+    // move each snake
+    for (auto& snake : snakes) {
+        Segment& head = snake.get_head();
+
+        if (snake.segments.size() > 1) {
+
+            // move each segment to location of the segment in front of it
+            for (int i=snake.segments.size() - 1; i > 0; i--) {// start from last index (tail)
+                snake.segments[i].x = snake.segments[i - 1].x;
+                snake.segments[i].y = snake.segments[i - 1].y;
+            }
+        }
+
+        // move head
+        head.x += speed * cos(head.angle);
+        head.y += speed * sin(head.angle);
+    }
+
+    // detect & handle collisions
+        for (auto& snake : snakes) {
+        Segment& head = snake.get_head();
+
+        for (auto& other : snakes) {
+            if (&other == &snake) continue;// skip self
+
+            for (auto& seg : other.segments) {
+                double dist = distance(head, seg);
+
+                // check for collision
+                if (dist < head.radius + seg.radius) {
+                    //todo: rip
+                }
+            }
+        }
     }
 }
