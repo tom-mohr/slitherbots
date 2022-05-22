@@ -1,16 +1,25 @@
 #include "logic.h"
 #include <math.h>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
+
+// seed random generator
+srand (static_cast <unsigned> (time(0)));
+
+double random(double min, double max) {
+    LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(max - min)));
+}
 
 Snake::Snake(string _name, py::function _step_fn) {//todo: pass name and step method from user
     sight_radius = 30;
     name = _name;
     step_fn = _step_fn;
     
-    //todo: add head to segments
-    //todo: pick random head angle at start
+    Segment head(random(-1, 1), random(-1, 1), 10, random(0, M_2_PI));
+    segments.push_back(head);
 }
 
 Segment& Snake::get_head() {

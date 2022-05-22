@@ -6,11 +6,16 @@ namespace py = pybind11;
 
 class Segment {
     public:
-        Segment();
         double x;
         double y;
         double radius;
         double angle;
+        Segment(double x, double y, double radius, double angle) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.angle = angle;
+        }
 };
 
 class SegmentInfo {
