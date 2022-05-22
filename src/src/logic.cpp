@@ -31,6 +31,13 @@ void Snake::apply_api(Api api) {
     head.angle += clamp(api.angle, -0.5, 0.5);
 }
 
+Segment::Segment(double x, double y, double radius, double angle) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.angle = angle;
+}
+
 double clamp(double value, double min, double max) {
     if (value < min) {
         return min;
@@ -58,6 +65,12 @@ double distance(Segment& a, Segment& b) {
 // make angle to be in [-pi, pi)
 double nice_angle(double angle) {
     return mod(angle + M_PI, M_2_PI) - M_PI;
+}
+
+World::World(vector<Snake> snakes) {
+    this.snakes = snakes;
+    size = 512;
+    speed = 5;
 }
 
 void World::step() {

@@ -10,12 +10,7 @@ class Segment {
         double y;
         double radius;
         double angle;
-        Segment(double x, double y, double radius, double angle) {
-            this.x = x;
-            this.y = y;
-            this.radius = radius;
-            this.angle = angle;
-        }
+        Segment(double x, double y, double radius, double angle);
 };
 
 class SegmentInfo {
@@ -48,9 +43,10 @@ class Snake {
 
 class World {
     public:
-        World(vector<Snake> _snakes);
+        World(vector<Snake> snakes);
         void step();
         double speed; // how many pixels a snake moves per step
+        double size; // world goes from -size to +size in each dimension
     private:
-        vector<Snake> snakes;//.push_back(), .size()
+        vector<Snake> snakes;
 };
