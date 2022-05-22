@@ -10,9 +10,11 @@ namespace py = pybind11;
 PYBIND11_MODULE(slitherbots, m) {
     py::class_<Snake>(m, "Snake")
         .def(py::init<string,py::function>(),py::arg("name"),py::arg("step_fn"));
-    py::class_<Api>(m,"Api") 
+    py::class_<Api>(m,"Api")
         .def_readonly("segments",&Api::segments)
+        .def_readonly("self_segments",&Api::self_segments)
         .def_readwrite("angle",&Api::angle);
+    py::class_<SegmentInfo>(m,"SegmentInfo");
     py::class_<World>(m,"World")
         .def(py::init<vector<Snake>>(),py::arg("snakes"))
         .def("step",&World::step);

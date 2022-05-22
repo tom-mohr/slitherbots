@@ -3,14 +3,14 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 using namespace std;
 
 // seed random generator
 
-
 double random(double min, double max) {
-    min + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(max - min)));
+    return min + double(rand()) / double(RAND_MAX) * (max - min);
 }
 
 Snake::Snake(string _name, py::function _step_fn) {//todo: pass name and step method from user
@@ -18,7 +18,7 @@ Snake::Snake(string _name, py::function _step_fn) {//todo: pass name and step me
     name = _name;
     step_fn = _step_fn;
     
-    Segment *head = new Segment(random(-1, 1), random(-1, 1), 10, random(0, M_2_PI));
+    Segment* head = new Segment(0, 0, 10, 0);
     segments.push_back(head);
 }
 
@@ -49,7 +49,7 @@ double clamp(double value, double min, double max) {
 }
 
 double mod(double a, double b) {
-    int i = fmod(a, b);
+    double i = fmod(a, b);
     if (i<a) i += b;
     return i;
 }
@@ -59,7 +59,7 @@ double distance(double x1, double y1, double x2, double y2) {
 }
 
 double distance(Segment* a, Segment* b) {
-    return distance(a->x, a->y, b->x, b->y);
+    return hypot(a->x - b->x,  a->y - b->y);
 }
 
 // make angle to be in [-pi, pi)
@@ -70,7 +70,12 @@ double nice_angle(double angle) {
 World::World(vector<Snake> _snakes) {
     srand(time(NULL));
     for(auto& snake : _snakes){
-        snakes.push_back(&snake);
+        auto new_snake = new Snake(snake);
+        snakes.push_back(new_snake);
+        auto head = new_snake->get_head();
+        head->x = random(-size, size);
+        head->y = random(-size,size);
+        head->angle = random(0, M_2_PI);
     }
     size = 512;
     speed = 5;
@@ -81,18 +86,17 @@ double World::wrap(double x) {
 }
 
 void World::step() {
-
     // get api responses
     for (auto snake : snakes) {
         Api api;
 
         Segment* head = snake->get_head();
-
+        
         for (auto other : snakes) {
             for (auto seg : other->segments) {
                 double dist = distance(head, seg);
                 if (dist <= snake->sight_radius) {
-
+                    
                     SegmentInfo si;
 
                     
@@ -100,7 +104,7 @@ void World::step() {
                     si.dir = nice_angle(atan2(seg->y - head->y, seg->x - head->x) - head->angle);
                     si.angle = nice_angle(seg->angle - head->angle);
 
-                    if (&other == &snake) {
+                    if (other == snake) {
                         api.self_segments.push_back(si);
                     } else {
                         api.segments.push_back(si);
@@ -112,7 +116,7 @@ void World::step() {
         // apply api object
         snake->apply_api(&api);
     }
-
+    
     // GAME LOGIC
 
     // move each snake
@@ -156,4 +160,5 @@ void World::step() {
             }
         }
     }
+    
 }
