@@ -11,7 +11,7 @@ Segment& Snake::get_head() {
     return segments[0];
 }
 
-void Snake::apply(Api api) {
+void Snake::apply_api(Api api) {
     Segment& head = get_head();
     head.angle += clamp(api.angle, -0.5, 0.5);
 }
