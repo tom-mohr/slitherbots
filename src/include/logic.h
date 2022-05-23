@@ -6,6 +6,40 @@
 using namespace std;
 namespace py = pybind11;
 
+class Api {
+    public:
+        // INPUT
+
+        vector<SegmentInfo> segments;
+        vector<SegmentInfo> self_segments;
+        vector<FoodInfo> food;
+
+        // OUTPUT
+
+        double angle;  // preferred angle change for next step
+};
+
+// FOOD
+
+class Food {
+    public:
+        double x;
+        double y;
+        double radius;
+        Food(double x, double y, double radius);
+}
+
+class FoodInfo {
+    public:
+        double radius;
+
+        // polar coordinates
+        double dir;
+        double r;
+}
+
+// SEGMENTS
+
 class Segment {
     public:
         double x;
@@ -24,12 +58,6 @@ class SegmentInfo {
         double r;
 };
 
-class Api {
-    public:
-        double angle;  // angle speed
-        vector<SegmentInfo> segments;
-        vector<SegmentInfo> self_segments;
-};
 
 class Snake {
     public:
@@ -48,7 +76,7 @@ class World {
         World(vector<Snake>);
         void step();
         double speed; // how many pixels a snake moves per step
-        double size; // world goes from -size to +size in each dimension
+        double size;  // world goes from -size to +size in each dimension
     private:
         vector<Snake*> snakes;
         double wrap(double x);
