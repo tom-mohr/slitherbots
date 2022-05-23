@@ -147,22 +147,60 @@ void World::step() {
         }
     }
 
+    // randomly spawn some food
+    int n_food_spawn = size * size / 20000;  // how much food to spawn (constant per area)
+    for (int i=0; i<n_food_spawn; i++) {
+        // select random position
+        Food* foo = new Food(random(-size, size), random(-size, size), 5);
+        food.push_back(foo);
+    }
+
     // detect & handle collisions
-        for (auto snake : snakes) {
+    vector<int> snakes_to_remove;  // indices that are scheduled for removal
+    vector<int> food_to_remove;
+    for (int i=0; i < snakes.size(); i++) {
+        Snake* snake = snakes[i];
         Segment* head = snake->get_head();
 
+        // head-snake collision (killing)
         for (auto other : snakes) {
             if (other == snake) continue;// skip self
 
             for (auto seg : other->segments) {
-                double dist = dist(head->x, head->y, seg->x, seg->y);
 
                 // check for collision
+                double dist = dist(head->x, head->y, seg->x, seg->y);
                 if (dist < head->radius + seg->radius) {
-                    //todo: rip
-                    cout << snake->name << endl;
+                    // rip
+                    cout << snake->name << " is dead" << endl;
+                    snakes_to_remove.push_back(i);  // schedule for later removal
                 }
             }
         }
+
+        // head-food collision (eating)
+        for (int j=0; j < food.size(); j++) {
+            Food* foo = food[j];
+
+            // check for collision
+            double dist = dist(head->x, head->y, foo->x, foo->y);
+            if (dist < head->radius) {  // head must overlap center of food (don't add food radius)
+                // yum
+                cout << snake->name << " eats" << endl;
+                //todo: grow snake
+                food_to_remove.push_back(j);
+            }
+        }
+    }
+    // remove dead snakes
+    for (int i=0; i < snakes_to_remove.size(); i++) {
+        // shift by i because i elements have already be deleted before, hence causing a shift in indices
+        int delete_index = snakes_to_remove[i] - i;
+        snakes.erase(delete_index);
+    }
+    // remove eaten food
+    for (int i=0; i < food_to_remove.size(); i++) {
+        int delete_index = food_to_remove[i] - i;
+        food.erase(delete_index);
     }
 }

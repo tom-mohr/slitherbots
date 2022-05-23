@@ -79,6 +79,7 @@ class World {
         double size;  // world goes from -size to +size in each dimension
     private:
         vector<Snake*> snakes;
+        vector<Food*> food;
         double wrap(double x);
         double dist(double x1, double y1, double x2, double y2);
 };
